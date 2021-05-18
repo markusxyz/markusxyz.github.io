@@ -18,10 +18,16 @@
         .container {
             max-width: 1200px;
             margin: auto;
-            border: 1px solid #bebeb4;
+            border: 0px solid #bebeb4;
             padding: 10px;
-            background-color: ;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
             background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgb(187, 214, 230));
+        }
+
+        .page {
+            max-width: 1200px;
+            margin: auto;
+            padding: 10px;
         }
 
         /* Specific mapael css class are below
@@ -30,12 +36,12 @@
 
         .mapael .map {
             position: relative;
+            top: 50px;
         }
 
         .mapael .mapTooltip {
             position: absolute;
             background-color: #fff;
-            moz-opacity: 0.70;
             opacity: 1.00;
             filter: alpha(opacity=70);
             border-radius: 10px;
@@ -47,10 +53,9 @@
         }
 
         .mapael .myLegend {
-            width: 400px;
+            width: 200px;
             border: 1px solid #bebeb4;
             background-color: #ffffff;
-            width: 200px;
             padding: 10px;
             float: right;
         }
@@ -59,7 +64,7 @@
         .mapael .zoomButton {
             background-color: #fff;
             border: 1px solid #ccc;
-            color: #000;
+            color: rgb(95, 95, 95);
             width: 20px;
             height: 20px;
             line-height: 20px;
@@ -80,17 +85,17 @@
 
         /* Reset Zoom button first */
         .mapael .zoomReset {
-            top: 10px;
+            top: -50px;
         }
 
         /* Then Zoom In button */
         .mapael .zoomIn {
-            top: 35px;
+            top: -25px;
         }
 
         /* Then Zoom Out button */
         .mapael .zoomOut {
-            top: 60px;
+            top: 0px;
         }
 
 
@@ -133,9 +138,9 @@
             border-radius: 7px;
             padding: 5px;
             position: relative;
-            top: -400px;
+            top: -350px;
             right: 0px;  
-            left: 10px;
+            left: 0px;
             background: rgba(255, 255, 255, 1);
             z-index: 1;
             max-width: 1200px;
@@ -157,23 +162,23 @@
         }
 
         #start {
-            left: 10px;
+            left: 0px;
             width: 12%;
-            top: -390px;
+            top: -340px;
         }
 
         #stop {
-            left: 20px;
+            left: 10px;
             width: 12%;
-            top: -390px;
+            top: -340px;
         }
 
         #remove {
-            left: 610px;
-            width: 1%;
-            padding: 9px 10px;
+            float: none ;
+            left: 0px;
+            width: 2%;
             text-align: center;
-            top: 155px;
+            top: -290px;
             cursor: pointer;
         }
 
@@ -198,6 +203,12 @@
             border: 0;
             background-color: rgb(224, 224, 224);
             width: 100%;
+        }
+
+        .horizontal-timeline {
+            max-width: 1200px;
+            margin: center;
+            width: 90%;
         }
 
 
@@ -513,6 +524,8 @@
 						            $('#timeline').horizontalTimeline('goTo', $( "#start_date_picker" ).val(), {smoothScroll: true, speed: 1000, offset: 100, easing: "easeInQuad"});
 
                                     selectmonth();
+
+                                    $( "#nextcity" ).val("");
 
                                     /*$(".mapcontainer").trigger('update', [{
                                             setLegendElemsState: {"mylegend": "hide"},
@@ -899,6 +912,7 @@
                     if (event.currentEventDate == jQuery.parseJSON($(this).attr('data-horizontal-timeline')).date) {
 
                         $( "#start_date_picker" ).val(jQuery.parseJSON($(this).attr('data-horizontal-timeline')).date);
+                        $( "#nextcity" ).val(jQuery.parseJSON($(this).attr('data-horizontal-timeline')).customDisplay);
                         
                         if (jQuery.parseJSON($(this).attr('data-horizontal-timeline')).enddate){
                             $( "#end_date_picker" ).val(jQuery.parseJSON($(this).attr('data-horizontal-timeline')).enddate);
@@ -922,48 +936,63 @@
 </head>
 
 <body>
-<h1>Plan your Worldtrip</h1>
-<br>
-<div class="container">
+<div class="page">
+    <h1>Plan your Worldtrip</h1>
     <br>
-    <br>
-    <br>
-    <br>
-    <div class="mapcontainer">
-        <div class="map">
-            <span>Alternative content for the map</span>
+    <div class="container">
+        <div class="mapcontainer">
+            <div class="map">
+                <span>Alternative content for the map</span>
+            </div>
+            <!--<div class="myLegend">
+                <span>Alternative content for the legend</span>
+            </div>-->
+            <br>
         </div>
-        <div class="myLegend">
-            <span>Alternative content for the legend</span>
+        <div class="inputbox">
+            <div>
+                <label for="startcity"><i class="fas fa-map-pin"></i></label>
+                <input type="text" id="startcity" placeholder="City to start from" class="inputfield"/>
+            </div>
+            <hr class="line">
+            <div>
+                <label for="nextcity"><i class="fas fa-map-marker-alt"></i></label>
+                <input type="text" id="nextcity" placeholder="Next city to travel to" class="inputfield"/>
+            </div>
         </div>
-        <br>
-    </div>
-    <div class="inputbox">
         <div>
-            <label for="startcity"><i class="fas fa-map-pin"></i></label>
-            <input type="text" id="startcity" placeholder="City to start from" class="inputfield"/>
+            <div class="inputbox-date" id="start">
+                <label for="start_date_picker"><i class="far fa-calendar-alt"></i></label>
+                <input type="text" id="start_date_picker" placeholder="Start Date" class="inputfield-date">
+            </div>
+            <div class="inputbox-date" id="stop">
+                <label for="end_date_picker"><i class="far fa-calendar-alt"></i></label>
+                <input type="text" id="end_date_picker" placeholder="End Date" class="inputfield-date">
+            </div>
+            <div class="inputbox-date" id="remove">
+                <i class="fas fa-trash-alt" id="remove_button"></i>
+            </div>
         </div>
-        <hr class="line">
-        <div>
-            <label for="nextcity"><i class="fas fa-map-marker-alt"></i></label>
-            <input type="text" id="nextcity" placeholder="Next city to travel to" class="inputfield"/>
-        </div>
-    </div>
-    <div>
-        <div class="inputbox-date" id="start">
-            <label for="start_date_picker"><i class="far fa-calendar-alt"></i></label>
-            <input type="text" id="start_date_picker" placeholder="Start Date" class="inputfield-date">
-        </div>
-        <div class="inputbox-date" id="stop">
-            <label for="end_date_picker"><i class="far fa-calendar-alt"></i></label>
-            <input type="text" id="end_date_picker" placeholder="End Date" class="inputfield-date">
-        </div>
-        <div class="inputbox-date" id="remove">
-            <i class="fas fa-trash-alt" id="remove_button"></i>
-        </div>
-    </div>
-    
+        
 
+
+            
+
+            <!--<div class="areaLegend">
+                <span>Alternative content for the legend</span>
+            </div>-->
+
+        
+        <div id="overlay">
+            <div id="popup">
+            <div id="close">X</div>
+            <i class="fas fa-ban fa-3x"></i>
+            <h2>City to Start</h2>
+            <p>Please choose the city, where you want to start from.</p>
+            </div>
+        </div>
+    </div>
+    <br>
     <br>
     <div class="horizontal-timeline" id="timeline"> 
         <div class="events-content"> 
@@ -972,23 +1001,7 @@
             </ol> 
         </div> 
     </div> 
-        
-
-        <!--<div class="areaLegend">
-            <span>Alternative content for the legend</span>
-        </div>-->
-
-    
-    <div id="overlay">
-        <div id="popup">
-           <div id="close">X</div>
-           <i class="fas fa-ban fa-3x"></i>
-           <h2>City to Start</h2>
-           <p>Please choose the city, where you want to start from.</p>
-        </div>
-    </div>
 </div>
-
 
 </body>
 </html>

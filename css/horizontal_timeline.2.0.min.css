@@ -52,7 +52,7 @@ html {
 .horizontal-timeline .events-wrapper {
     position: relative;
     /* Höhe der Timeline */
-    height: 60px;
+    height: 55px;
     overflow: hidden;
     -ms-flex: 1 1 auto !important;
     flex: 1 1 auto !important
@@ -65,7 +65,7 @@ html {
     bottom: 13%;
     height: 5px;
     /* timeline */
-    background: rgba(148, 138, 138);
+    background: #575757;
     -webkit-transition: -webkit-transform .4s;
     -moz-transition: -moz-transform .4s;
     transition: transform .4s
@@ -176,7 +176,7 @@ html {
 .timeline-navigation a.inactive {
     cursor: not-allowed;
     border-color: #d3d3d3;
-    color: #d3d3d3
+    color: #575757;
 }
 
 .timeline-navigation#pausePlay {
@@ -212,14 +212,14 @@ html {
 
 .horizontal-timeline .events-content li {
     position: absolute;
-    width: 90%;
+    width: 80%;
     left: 0;
     top: 20px;
     margin: auto;
     padding: 10px;
     /* Event Hintergrund*/
-    background: #e9c56a81;
-    border-radius: 20px;
+    background: #ffffff;
+    border-radius: 7px;
     opacity: 0;
     font-size: 14pt;
     text-align: center;
