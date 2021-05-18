@@ -20,6 +20,8 @@
             margin: auto;
             border: 1px solid #bebeb4;
             padding: 10px;
+            background-color: ;
+            background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgb(187, 214, 230));
         }
 
         /* Specific mapael css class are below
@@ -53,21 +55,21 @@
             float: right;
         }
 
-                /* For all zoom buttons */
+        /* For all zoom buttons */
         .mapael .zoomButton {
             background-color: #fff;
             border: 1px solid #ccc;
             color: #000;
-            width: 15px;
-            height: 15px;
-            line-height: 15px;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
             text-align: center;
             border-radius: 3px;
             cursor: pointer;
             position: absolute;
             top: 0;
             font-weight: bold;
-            left: 10px;
+            right: 10px;
 
             -webkit-user-select: none;
             -khtml-user-select : none;
@@ -83,12 +85,12 @@
 
         /* Then Zoom In button */
         .mapael .zoomIn {
-            top: 30px;
+            top: 35px;
         }
 
         /* Then Zoom Out button */
         .mapael .zoomOut {
-            top: 50px;
+            top: 60px;
         }
 
 
@@ -103,6 +105,7 @@
             left: 0;
             background: rgba(0,0,0,0.8);
             display: none;
+            z-index: 2;
         }
 
         #popup {
@@ -124,6 +127,78 @@
             color: #000;
         }
 
+        .inputbox {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            width: 25%;
+            border-radius: 7px;
+            padding: 5px;
+            position: relative;
+            top: -400px;
+            right: 0px;  
+            left: 10px;
+            background: rgba(255, 255, 255, 1);
+            z-index: 1;
+            max-width: 1200px;
+            margin: left;
+            padding: 10px;
+        }
+
+        .inputbox-date {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            width: 25%;
+            border-radius: 7px;
+            padding: 5px;
+            position: relative;
+            float: left;
+            right: 0;  
+            left: 20px;
+            background: rgba(255, 255, 255, 1);
+            z-index: 1;
+        }
+
+        #start {
+            left: 10px;
+            width: 12%;
+            top: -390px;
+        }
+
+        #stop {
+            left: 20px;
+            width: 12%;
+            top: -390px;
+        }
+
+        #remove {
+            left: 610px;
+            width: 1%;
+            padding: 9px 10px;
+            text-align: center;
+            top: 155px;
+            cursor: pointer;
+        }
+
+        .inputbox .inputfield {
+            box-shadow: none;
+            border-style: none;
+            background-color: white;
+            width: 80%;
+        }
+
+
+        .inputbox-date .inputfield-date {
+            box-shadow: none;
+            border-style: none;
+            background-color: white;
+            width: 70%;
+            text-align: center;
+        }
+
+        .inputbox .line {
+            height: 1px;
+            border: 0;
+            background-color: rgb(224, 224, 224);
+            width: 100%;
+        }
 
 
     </style>
@@ -537,6 +612,34 @@
                     }
                 });
 
+                $( "#nextcity" ).autocomplete( {
+                    source: Object.keys(plots),
+                    select: function (event, ui) {
+
+                        var deletedPlots = [""];
+
+                        var nextcity = ui.item.value;
+
+                        var tmpPlots = {};
+                        tmpPlots[nextcity] = plots[nextcity];
+                        plots[nextcity].flag = 1;
+
+                        $(".mapcontainer").trigger('zoom', {
+                                        area: plots[nextcity].iso2,
+                                        areaMargin: 10
+                                    });
+
+                        $(".mapcontainer").trigger('update', [{
+                                        //mapOptions: updatedOptions, 
+                                        newPlots: tmpPlots,
+                                        deletePlotKeys: deletedPlots,
+                                        animDuration: 2000
+                                    }]);
+                    }
+                });
+
+                
+
                 }).fail(function() {
                     // Error
                     $(".mapcontainer span").html("Failed to load JSON data").css({"color":"red"});
@@ -679,7 +782,7 @@
 
       $(document).ready(function() {
 
-        $('#timeline').horizontalTimeline();
+        //$('#timeline').horizontalTimeline();
 
         /* The Defaults */
         $('#timeline').horizontalTimeline({ 
@@ -819,9 +922,12 @@
 </head>
 
 <body>
+<h1>Plan your Worldtrip</h1>
+<br>
 <div class="container">
-
-    <h1>Plan your Worldtrip</h1>
+    <br>
+    <br>
+    <br>
     <br>
     <div class="mapcontainer">
         <div class="map">
@@ -832,13 +938,33 @@
         </div>
         <br>
     </div>
-    <div>
-        <input type="text" id="startcity" placeholder="City to start from"/>
-        <input type="text" id="start_date_picker" placeholder="Start Date">
-        <input type="text" id="end_date_picker" placeholder="End Date">
-        <i class="fas fa-trash-alt" id="remove_button"></i>
+    <div class="inputbox">
+        <div>
+            <label for="startcity"><i class="fas fa-map-pin"></i></label>
+            <input type="text" id="startcity" placeholder="City to start from" class="inputfield"/>
+        </div>
+        <hr class="line">
+        <div>
+            <label for="nextcity"><i class="fas fa-map-marker-alt"></i></label>
+            <input type="text" id="nextcity" placeholder="Next city to travel to" class="inputfield"/>
+        </div>
     </div>
+    <div>
+        <div class="inputbox-date" id="start">
+            <label for="start_date_picker"><i class="far fa-calendar-alt"></i></label>
+            <input type="text" id="start_date_picker" placeholder="Start Date" class="inputfield-date">
+        </div>
+        <div class="inputbox-date" id="stop">
+            <label for="end_date_picker"><i class="far fa-calendar-alt"></i></label>
+            <input type="text" id="end_date_picker" placeholder="End Date" class="inputfield-date">
+        </div>
+        <div class="inputbox-date" id="remove">
+            <i class="fas fa-trash-alt" id="remove_button"></i>
+        </div>
+    </div>
+    
 
+    <br>
     <div class="horizontal-timeline" id="timeline"> 
         <div class="events-content"> 
             <ol> 
