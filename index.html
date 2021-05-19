@@ -523,14 +523,30 @@
 
                                     // Make Enddate to Startdate
                                     $( "#start_date_picker" ).val($( "#end_date_picker" ).val());
+
+                                    var contentHtml = "<h1>" + id + "</h1>";
+
+                                    //Load Wikipedia Artikel
+                                    $.getJSON("https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&prop=extracts&exintro=&explaintext=&formatversion=2&titles=" + encodeURIComponent(id), function (data) {
+                                        // Success
+                                        // Parse each elements
+                                        console.warn(data);
+
+                                        contentHtml = contentHtml + "<p>" + data.query.pages[0].extract + "</p>";
+
+                                        var html = "<li data-horizontal-timeline='{\"date\": \"" + $( "#start_date_picker" ).val() + "\", \"customDisplay\": \"" + id + "\", \"enddate\": \"" + $( "#end_date_picker" ).val() + "\"}'>" + contentHtml + "</li>";
+
+                                        $('#timeline').horizontalTimeline('addEvent', html, 'after', jQuery.parseJSON(tmp).date);
+
+                                        // Smooth scroll enabled with all options set.
+    						            $('#timeline').horizontalTimeline('goTo', $( "#start_date_picker" ).val(), {smoothScroll: true, speed: 1000, offset: 100, easing: "easeInQuad"});
+
+                                    });
                                     
-                                    var html = "<li data-horizontal-timeline='{\"date\": \"" + $( "#start_date_picker" ).val() + "\", \"customDisplay\": \"" + id + "\", \"enddate\": \"" + $( "#end_date_picker" ).val() + "\"}'>" + id + "</li>";
+                                    
 
-							        $('#timeline').horizontalTimeline('addEvent', html, 'after', jQuery.parseJSON(tmp).date);
 
-                                    // Smooth scroll enabled with all options set.
-						            $('#timeline').horizontalTimeline('goTo', $( "#start_date_picker" ).val(), {smoothScroll: true, speed: 1000, offset: 100, easing: "easeInQuad"});
-
+                                    
                                     selectmonth();
 
                                     $( "#nextcity" ).val("");
@@ -1031,8 +1047,6 @@
             </div>
         </div>
     </div>
-    <br>
-    <br>
     <div class="horizontal-timeline" id="timeline"> 
         <div class="events-content"> 
             <ol> 
