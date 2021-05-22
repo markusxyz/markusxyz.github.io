@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Plan your Worldtrip</title>
+    <title>Travelfar Worldtrip Planer</title>
     <style type="text/css">
         body {
             color: #5d5d5d;
@@ -27,7 +27,7 @@
         .page {
             max-width: 1200px;
             margin: auto;
-            padding: 10px;
+            padding: 0px;
         }
 
         /* Specific mapael css class are below
@@ -62,7 +62,7 @@
         }
 
         .mapael .areaLegend {
-            top: 490px;
+            top: 440px;
             margin: center;
             position: relative;
             z-index: 2;
@@ -170,23 +170,23 @@
         }
 
         #start {
-            left: 0px;
+            left: 250px;
             width: 12%;
-            top: -380px;
+            top: -420px;
         }
 
         #stop {
-            left: 10px;
+            left: 270px;
             width: 12%;
-            top: -380px;
+            top: -420px;
         }
 
         #remove {
             float: none ;
-            left: 0px;
+            left: 510px;
             width: 2%;
             text-align: center;
-            top: -340px;
+            top: -440px;
             cursor: pointer;
         }
 
@@ -206,19 +206,25 @@
             text-align: center;
         }
 
-        .inputbox .line {
-            height: 1px;
-            border: 0;
-            background-color: rgb(224, 224, 224);
-            width: 100%;
-        }
-
         .horizontal-timeline {
             max-width: 1200px;
             margin: center;
-            width: 90%;
+            width: 70%;
+            padding: 10px;
         }
 
+        .ui-autocomplete {
+            max-height: 200px;
+            overflow-y: auto;
+            /* prevent horizontal scrollbar */
+            overflow-x: hidden;
+        }
+        /* IE 6 doesn't support max-height
+        * we use height instead, but this forces the menu to always be this tall
+        */
+        * html .ui-autocomplete {
+            height: 200px;
+        }
 
     </style>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
@@ -249,7 +255,8 @@
         $(function () {
 
             // Show loading message
-            $(".mapcontainer span").html("Loading...").css({"color":"#2a9d8f", "font-weight":"bold"});
+            $(".mapcontainer .map span").html("Loading...").css({"color":"#2a9d8f", "font-weight":"bold"});
+            $(".mapcontainer .areaLegend span").html("").css({"color":"#2a9d8f", "font-weight":"bold"});
 
             // We need a setTimeout (~200ms) in order to allow the UI to be refreshed for the message to be shown
             setTimeout(function(){
@@ -302,13 +309,13 @@
                             }
 
                             if (index == 0){
-                                traveltime = traveltime + "<table style=\" table-layout: fixed; width: 100%\"><tr style=\"color:#424242; font-size:90%\"><td style=\" width: 8%\" bgcolor=\"" + color + "\">" + monatsabkuerzung[index] + "<\/td>"
+                                traveltime = traveltime + "<table style=\" table-layout: fixed; width: 100%\"><tr style=\"color:#424242; font-size:90%\"><td style=\" width: 8%; text-align: center; vertical-align: middle;\" bgcolor=\"" + color + "\">" + monatsabkuerzung[index] + "<\/td>"
                             }
                             else if (index == 11){
-                                traveltime = traveltime + "<td style=\" width: 8%\" bgcolor=\"" + color + "\">" + monatsabkuerzung[index] + "<\/td><\/tr><\/table>"
+                                traveltime = traveltime + "<td style=\" width: 8%; text-align: center; vertical-align: middle;\" bgcolor=\"" + color + "\">" + monatsabkuerzung[index] + "<\/td><\/tr><\/table>"
                             }
                             else{
-                                traveltime = traveltime + "<td style=\" width: 8%\" bgcolor=\"" + color + "\">" + monatsabkuerzung[index] + "<\/td>"
+                                traveltime = traveltime + "<td style=\" width: 8%; text-align: center; vertical-align: middle;\" bgcolor=\"" + color + "\">" + monatsabkuerzung[index] + "<\/td>"
                             }
                         }
 
@@ -349,7 +356,7 @@
                     $.each(data, function (id, elem) {
                         //$('<option value="' + elem.city + '">' + elem.city + '</option>').appendTo("#choose_start");
                         // Check if we have the GPS position of the element
-                        if (elem.capital == "primary" || elem.capital == "admin" || elem.airport != "NV") {
+                        //if (elem.capital == "primary" || elem.capital == "admin" || elem.airport != "NV") {
                         //if ((elem.airport != 0 && elem.airport != "NV")) {
                             // Will hold the plot information
                             var plot = {};
@@ -377,10 +384,10 @@
                             plot.value = elem.population;
                             plot.city = elem.city;
                             // Set plot element to array
-                            plots[elem.city] = plot;
-                        } else {
+                            plots[elem.city + " (" + elem.country + ")"] = plot;
+                        //} else {
                             //console.warn("Ignored element " + id + " without GPS position");
-                        }
+                        //}
 
                     });
 
@@ -451,7 +458,6 @@
                                     lastcity = jQuery.parseJSON(tmp).customDisplay;
                                     if (lastcity == "Start"){
                                         lastcity = startcity;
-                                        console.warn(lastcity);
                                         if (startcity == ""){
                                             $( "#popup>h2" ).text('City to Start');
                                             $( "#popup>p" ).text('Please choose the city, where you want to start from.');
@@ -527,7 +533,7 @@
                                     var contentHtml = "<h1>" + id + "</h1>";
 
                                     //Load Wikipedia Artikel
-                                    $.getJSON("https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&prop=extracts&exintro=&explaintext=&formatversion=2&titles=" + encodeURIComponent(id), function (data) {
+                                    $.getJSON("https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&prop=extracts&exintro=&explaintext=&formatversion=2&titles=" + encodeURIComponent(plots[id].city), function (data) {
                                         // Success
                                         // Parse each elements
                                         console.warn(data);
@@ -658,6 +664,7 @@
                 });
                             
                 $( "#startcity" ).autocomplete( {
+                    max: 10, 
                     source: Object.keys(plots),
                     select: function (event, ui) {
 
@@ -681,10 +688,32 @@
                                         deletePlotKeys: deletedPlots,
                                         animDuration: 2000
                                     }]);
+                        if ($( "#start_date_picker" ).datepicker('getDate') == null){
+                            $( "#popup>h2" ).text('Choose Date');
+                            $( "#popup>p" ).text('Please choose a date when you like to start.');
+                            $('#overlay').fadeIn(300);
+                            $( "#startcityfield" ).val("default");
+                            return
+                        };
+
+                        var html = "<li data-horizontal-timeline='{\"date\": \"" + $( "#start_date_picker" ).val() + "\", \"customDisplay\": \"" + startcity + "\", \"enddate\": \"" + $( "#end_date_picker" ).val() + "\"}'>" + startcity + "</li>";
+
+                        $('#timeline').horizontalTimeline('addEvent', html, 'before', "01/01/2000");
+
+                        // Get latest Event in timeline
+                        var tmp = $('#timeline>div>ol li:last').attr('data-horizontal-timeline');
+
+                        $('#timeline').horizontalTimeline('removeEvent', "01/01/2000");
+
+                        // Wenn Startcity ausgewaehlt dann Feld durch naechste City ersetzen
+                        $( "#startcityfield" ).hide( "fade", {}, 1000, function() {
+                            $( "#nextcityfield" ).show().fadeIn();
+                        } );
                     }
                 });
 
                 $( "#nextcity" ).autocomplete( {
+                    max: 10,
                     source: Object.keys(plots),
                     select: function (event, ui) {
 
@@ -832,20 +861,6 @@
 
             };
 
-            //Filter smaller Citys
-            /*updatedOptions.legend = {
-                plot: {
-                    slices: [{
-                        clicked: true
-                    }, {
-                        clicked: true
-                    }, {
-                        clicked: true
-                    }, {
-                        clicked: true
-                    }]
-                }
-            };*/
             $(".mapcontainer").trigger('update', [{
                             mapOptions: updatedOptions, 
                             animDuration: 1000
@@ -897,7 +912,10 @@
 							"left": "exit-left",
 							"right": "exit-right"}}
 
-        }); 
+        });
+
+        // When load hide the nexcityfield
+        $( "#nextcityfield" ).hide();
           
         $(function() {
         
@@ -996,7 +1014,10 @@
 
 <body>
 <div class="page">
-    <h1>Plan your Worldtrip</h1>
+    <div style="background-color: black; padding: 10px;">
+        <a href="https://travelfar2019.com/" style="color: white; text-decoration: none;">Website</a>
+    </div>
+    <img width="200" height="100" src="./ressources/cropped-travelfar_transparent1.png">
     <br>
     <div class="container">
         <div class="mapcontainer">
@@ -1012,18 +1033,18 @@
             <br>
 
         </div>
-        <div class="inputbox">
-            <div>
+        <div>
+        
+            <div class="inputbox" id="startcityfield">
                 <label for="startcity"><i class="fas fa-map-pin"></i></label>
                 <input type="text" id="startcity" placeholder="City to start from" class="inputfield"/>
             </div>
-            <hr class="line">
-            <div>
+            <div  class="inputbox" id="nextcityfield">
                 <label for="nextcity"><i class="fas fa-map-marker-alt"></i></label>
                 <input type="text" id="nextcity" placeholder="Next city to travel to" class="inputfield"/>
             </div>
-        </div>
-        <div>
+        
+        
             <div class="inputbox-date" id="start">
                 <label for="start_date_picker"><i class="far fa-calendar-alt"></i></label>
                 <input type="text" id="start_date_picker" placeholder="Start Date" class="inputfield-date">
@@ -1046,14 +1067,15 @@
             <p>Please choose the city, where you want to start from.</p>
             </div>
         </div>
-    </div>
-    <div class="horizontal-timeline" id="timeline"> 
-        <div class="events-content"> 
-            <ol> 
-                <li class="selected" data-horizontal-timeline='{"date": "01/01/2000", "customDisplay": "Start"}'> Your Trip starts here! </li>
-            </ol> 
+    
+        <div class="horizontal-timeline" id="timeline"> 
+            <div class="events-content"> 
+                <ol> 
+                    <li class="selected" data-horizontal-timeline='{"date": "01/01/2000", "customDisplay": "Start"}'> Your Trip starts here! </li>
+                </ol> 
+            </div> 
         </div> 
-    </div> 
+    </div>
 </div>
 
 </body>
