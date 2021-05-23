@@ -378,7 +378,6 @@
                                 plot.attrs = {fill: "#2579b5"};
                             }*/
 
-
                             plot.country = elem.country;
                             plot.iso2 = elem.iso2;
                             plot.value = elem.population;
@@ -455,7 +454,7 @@
                                     var tmp = $('#timeline>div>ol li:last').attr('data-horizontal-timeline');
                                     var lastcity = "";
 
-                                    lastcity = jQuery.parseJSON(tmp).customDisplay;
+                                    lastcity = jQuery.parseJSON(tmp).id;
                                     if (lastcity == "Start"){
                                         lastcity = startcity;
                                         if (startcity == ""){
@@ -483,10 +482,10 @@
                                     Object.values(plots).forEach(plot => {
                                         if (plot.flag == 1) {
                                             //console.warn(plot.iso2);
-                                            tmpPlots[plot.city] = plot;
+                                            tmpPlots[plot.city + " (" + plot.country + ")"] = plot;
                                         }
                                         if (plot.flag == 0){
-                                            deletedPlots.push(plot.city);
+                                            deletedPlots.push(plot.city + " (" + plot.country + ")");
                                         }                                   
                                     });
 
@@ -536,11 +535,11 @@
                                     $.getJSON("https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&prop=extracts&exintro=&explaintext=&formatversion=2&titles=" + encodeURIComponent(plots[id].city), function (data) {
                                         // Success
                                         // Parse each elements
-                                        console.warn(data);
+                                        //console.warn(data);
 
                                         contentHtml = contentHtml + "<p>" + data.query.pages[0].extract + "</p>";
 
-                                        var html = "<li data-horizontal-timeline='{\"date\": \"" + $( "#start_date_picker" ).val() + "\", \"customDisplay\": \"" + id + "\", \"enddate\": \"" + $( "#end_date_picker" ).val() + "\"}'>" + contentHtml + "</li>";
+                                        var html = "<li data-horizontal-timeline='{\"date\": \"" + $( "#start_date_picker" ).val() + "\", \"customDisplay\": \"" + plots[id].city + "\", \"enddate\": \"" + $( "#end_date_picker" ).val() + "\", \"id\": \"" + id + "\"}'>" + contentHtml + "</li>";
 
                                         $('#timeline').horizontalTimeline('addEvent', html, 'after', jQuery.parseJSON(tmp).date);
 
@@ -696,7 +695,7 @@
                             return
                         };
 
-                        var html = "<li data-horizontal-timeline='{\"date\": \"" + $( "#start_date_picker" ).val() + "\", \"customDisplay\": \"" + startcity + "\", \"enddate\": \"" + $( "#end_date_picker" ).val() + "\"}'>" + startcity + "</li>";
+                        var html = "<li data-horizontal-timeline='{\"date\": \"" + $( "#start_date_picker" ).val() + "\", \"customDisplay\": \"" + plots[startcity].city + "\", \"enddate\": \"" + $( "#end_date_picker" ).val() + "\", \"id\": \"" + startcity + "\"}'>" + startcity + "</li>";
 
                         $('#timeline').horizontalTimeline('addEvent', html, 'before', "01/01/2000");
 
@@ -956,13 +955,13 @@
 
                 $( "#start_date_picker" ).val(jQuery.parseJSON(tmp).date);
                 
-                plots[jQuery.parseJSON(tmp).customDisplay].flag = 0;
+                plots[jQuery.parseJSON(tmp).id].flag = 0;
 
                 // Remove connection
                 var opt = {
                     animDuration: 1000,
-                    'deleteLinkKeys': [jQuery.parseJSON(tmp).customDisplay],
-                    deletePlotKeys: [jQuery.parseJSON(tmp).customDisplay]
+                    'deleteLinkKeys': [jQuery.parseJSON(tmp).id],
+                    deletePlotKeys: [jQuery.parseJSON(tmp).id]
                 };
 
                 $(".mapcontainer").trigger('update', [opt]);
@@ -989,7 +988,7 @@
                     if (event.currentEventDate == jQuery.parseJSON($(this).attr('data-horizontal-timeline')).date) {
 
                         $( "#start_date_picker" ).val(jQuery.parseJSON($(this).attr('data-horizontal-timeline')).date);
-                        $( "#nextcity" ).val(jQuery.parseJSON($(this).attr('data-horizontal-timeline')).customDisplay);
+                        $( "#nextcity" ).val(jQuery.parseJSON($(this).attr('data-horizontal-timeline')).id);
                         
                         if (jQuery.parseJSON($(this).attr('data-horizontal-timeline')).enddate){
                             $( "#end_date_picker" ).val(jQuery.parseJSON($(this).attr('data-horizontal-timeline')).enddate);
@@ -1071,7 +1070,7 @@
         <div class="horizontal-timeline" id="timeline"> 
             <div class="events-content"> 
                 <ol> 
-                    <li class="selected" data-horizontal-timeline='{"date": "01/01/2000", "customDisplay": "Start"}'> Your Trip starts here! </li>
+                    <li class="selected" data-horizontal-timeline='{"date": "01/01/2000", "customDisplay": "Start", "id": "Start"}'> Your Trip starts here! </li>
                 </ol> 
             </div> 
         </div> 
