@@ -664,8 +664,8 @@
                 });
                             
                 $( "#startcity" ).autocomplete( {
-                    max: 10, 
                     source: Object.keys(plots),
+                    minLength: 3,
                     select: function (event, ui) {
 
                         var deletedPlots = [""];
@@ -713,8 +713,8 @@
                 });
 
                 $( "#nextcity" ).autocomplete( {
-                    max: 10,
                     source: Object.keys(plots),
+                    minLength: 3,
                     select: function (event, ui) {
 
                         var deletedPlots = [""];
