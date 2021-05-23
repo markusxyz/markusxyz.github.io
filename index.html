@@ -183,10 +183,19 @@
 
         #remove {
             float: none ;
-            left: 510px;
+            left: 560px;
             width: 2%;
             text-align: center;
             top: -440px;
+            cursor: pointer;
+        }
+
+        #add {
+            float: none ;
+            left: 510px;
+            width: 2%;
+            text-align: center;
+            top: -480px;
             cursor: pointer;
         }
 
@@ -328,7 +337,7 @@
                             var tmp = areas[elem.Country];
                             tooltip = tmp.tooltip;
                             var content = tooltip.content;
-                            //console.warn(elem.Country);
+
                         }
  
                         if (elem.Part){
@@ -415,7 +424,7 @@
 
                                     Object.values(plots).forEach(plot => {
                                         if (plot.iso2 == id) {
-                                            //console.warn(plot.iso2);
+ 
                                             tmpPlots[plot.city] = plot;
                                             plots[plot.city].flag = 0;                                    }
                                     });
@@ -445,121 +454,12 @@
                             }
                         },
                         defaultPlot: {
-                            fill: "#2579b5",
+                            fill: "#38faf9",
                             eventHandlers: {
                                 click: function (e, id) {
 
-                                    $(".mapcontainer").trigger('zoom', {level: 0});
+                                    addcitytoroute(id);
 
-                                    var tmp = $('#timeline>div>ol li:last').attr('data-horizontal-timeline');
-                                    var lastcity = "";
-
-                                    lastcity = jQuery.parseJSON(tmp).id;
-                                    if (lastcity == "Start"){
-                                        lastcity = startcity;
-                                        if (startcity == ""){
-                                            $( "#popup>h2" ).text('City to Start');
-                                            $( "#popup>p" ).text('Please choose the city, where you want to start from.');
-                                            $('#overlay').fadeIn(300);
-                                            return
-                                        }
-                                    }
-
-                                    if (jQuery.parseJSON(tmp).date == $( "#start_date_picker" ).val()){
-                                        $( "#popup>h2" ).text('Choose different start date');
-                                        $( "#popup>p" ).text('Please don\'t choose the same date as end date from your previous location and start date for your next location');
-                                        $('#overlay').fadeIn(300);
-                                        return
-                                    }
-
-                                    //Set target city to not delete again
-                                    plots[id].flag = 1;
-
-                                    //delete not used plots and keep used plots
-                                    var tmpPlots = {};
-                                    var deletedPlots = [];
-
-                                    Object.values(plots).forEach(plot => {
-                                        if (plot.flag == 1) {
-                                            //console.warn(plot.iso2);
-                                            tmpPlots[plot.city + " (" + plot.country + ")"] = plot;
-                                        }
-                                        if (plot.flag == 0){
-                                            deletedPlots.push(plot.city + " (" + plot.country + ")");
-                                        }                                   
-                                    });
-
-                                    //console.warn(id + " " + lastcity);
-                                    // Draw ne line
-                                    var opt = {
-                                                [id] : {
-                                                    factor: -0.5
-                                                    , between: [lastcity, id]
-                                                    , attrs: {
-                                                        "stroke-width": 2
-                                                        , 'stroke': '#219ebc'
-                                                    }
-                                                }
-                                            };
-
-                                    var updatedOptions = {};
-                                    //Filter smaller Citys
-                                    updatedOptions.legend = {
-                                        plot: {
-                                            slices: [{
-                                                clicked: false
-                                            }, {
-                                                clicked: false
-                                            }, {
-                                                clicked: false
-                                            }, {
-                                                clicked: false
-                                            }]
-                                        }
-                                    };
-                                    
-                                    $(".mapcontainer").trigger('update', {
-                                            mapOptions: updatedOptions,
-                                            animDuration: 1000,
-                                            'newLinks': opt,
-                                            newPlots: tmpPlots,
-                                            deletePlotKeys: deletedPlots
-                                    });
-
-                                    // Make Enddate to Startdate
-                                    $( "#start_date_picker" ).val($( "#end_date_picker" ).val());
-
-                                    var contentHtml = "<h1>" + id + "</h1>";
-
-                                    //Load Wikipedia Artikel
-                                    $.getJSON("https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&prop=extracts&exintro=&explaintext=&formatversion=2&titles=" + encodeURIComponent(plots[id].city), function (data) {
-                                        // Success
-                                        // Parse each elements
-                                        //console.warn(data);
-
-                                        contentHtml = contentHtml + "<p>" + data.query.pages[0].extract + "</p>";
-
-                                        var html = "<li data-horizontal-timeline='{\"date\": \"" + $( "#start_date_picker" ).val() + "\", \"customDisplay\": \"" + plots[id].city + "\", \"enddate\": \"" + $( "#end_date_picker" ).val() + "\", \"id\": \"" + id + "\"}'>" + contentHtml + "</li>";
-
-                                        $('#timeline').horizontalTimeline('addEvent', html, 'after', jQuery.parseJSON(tmp).date);
-
-                                        // Smooth scroll enabled with all options set.
-    						            $('#timeline').horizontalTimeline('goTo', $( "#start_date_picker" ).val(), {smoothScroll: true, speed: 1000, offset: 100, easing: "easeInQuad"});
-
-                                    });
-                                    
-                                    
-
-
-                                    
-                                    selectmonth();
-
-                                    $( "#nextcity" ).val("");
-
-                                    /*$(".mapcontainer").trigger('update', [{
-                                            setLegendElemsState: {"mylegend": "hide"},
-                                            animDuration: 1000
-                                        }]);*/
                                 }
                             }
                         }
@@ -599,67 +499,9 @@
                                         label: "mix weather"
                                     }
                                 ]
-                            },
-                            plot: {
-                                cssClass: 'myLegend',
-                                mode: "vertical",
-                                labelAttrs: {
-                                    fill: "#4a4a4a"
-                                },
-                                titleAttrs: {
-                                    fill: "#4a4a4a"
-                                },
-                                marginBottom: 20,
-                                marginLeft: 30,
-                                hideElemsOnClick: {
-                                    opacity: 0
-                                },
-                                title: "Cities populations",
-                                slices: [{
-                                    size: 1,
-                                    type: "circle",
-                                    max: 100000,
-                                    attrs: {
-                                        //fill: "#f99200"
-                                        fill: "#495057"
-                                    },
-                                    label: "< 100 000 inhabitants",
-                                    clicked: false
-                                }, {
-                                    size: 2,
-                                    type: "circle",
-                                    min: 100000,
-                                    max: 500000,
-                                    attrs: {
-                                        fill: "#495057"
-                                    },
-                                    label: "> 100 000 and 500 000",
-                                    clicked: false
-                                }, {
-                                    size: 3,
-                                    type: "circle",
-                                    min: 500000,
-                                    max: 1000000,
-                                    attrs: {
-                                        fill: "#495057"
-                                    },
-                                    label: "> 500 000 and 1 000 000",
-                                    clicked: false
-                                }, {
-                                    size: 4,
-                                    type: "circle",
-                                    min: 1000000,
-                                    attrs: {
-                                        fill: "#495057"
-                                    },
-                                    label: "> 1 000 000",
-                                    clicked: false
-                                }]
                             }
                         },
-                    areas: areas//,
-                    // Alle aus JSON File ausgelesene Städte
-                    //plots: plots
+                    areas: areas
                 });
                             
                 $( "#startcity" ).autocomplete( {
@@ -677,6 +519,9 @@
                         startcity = ui.item.value;
 
                         var tmpPlots = {};
+                        plots[startcity].size = "15";
+                        plots[startcity].attrs= {fill: "#055e5e"};
+
                         tmpPlots[startcity] = plots[startcity];
                         plots[startcity].flag = 1;
                         //tmpPlots[startcity].size = 20;
@@ -687,26 +532,23 @@
                                         deletePlotKeys: deletedPlots,
                                         animDuration: 2000
                                     }]);
-                        if ($( "#start_date_picker" ).datepicker('getDate') == null){
-                            $( "#popup>h2" ).text('Choose Date');
-                            $( "#popup>p" ).text('Please choose a date when you like to start.');
-                            $('#overlay').fadeIn(300);
-                            $( "#startcityfield" ).val("default");
-                            return
-                        };
 
-                        var html = "<li data-horizontal-timeline='{\"date\": \"" + $( "#start_date_picker" ).val() + "\", \"customDisplay\": \"" + plots[startcity].city + "\", \"enddate\": \"" + $( "#end_date_picker" ).val() + "\", \"id\": \"" + startcity + "\"}'>" + startcity + "</li>";
+                        var html = "<li data-horizontal-timeline='{\"date\": \"" + "01/01/2000" + "\", \"customDisplay\": \"" + plots[startcity].city + "\", \"enddate\": \"" + $( "#end_date_picker" ).val() + "\", \"id\": \"" + startcity + "\"}'>" + startcity + "</li>";
 
-                        $('#timeline').horizontalTimeline('addEvent', html, 'before', "01/01/2000");
+                        $('#timeline').horizontalTimeline('addEvent', html, 'before', "02/01/2000");
 
                         // Get latest Event in timeline
                         var tmp = $('#timeline>div>ol li:last').attr('data-horizontal-timeline');
 
-                        $('#timeline').horizontalTimeline('removeEvent', "01/01/2000");
+                        $('#timeline').horizontalTimeline('removeEvent', "02/01/2000");
 
                         // Wenn Startcity ausgewaehlt dann Feld durch naechste City ersetzen
                         $( "#startcityfield" ).hide( "fade", {}, 1000, function() {
                             $( "#nextcityfield" ).show().fadeIn();
+                            $( "#stop" ).show().fadeIn();
+                            $( "#start" ).show().fadeIn();
+                            $( "#remove" ).show().fadeIn();
+                            $( "#add" ).show().fadeIn();
                         } );
                     }
                 });
@@ -721,6 +563,9 @@
                         var nextcity = ui.item.value;
 
                         var tmpPlots = {};
+                        
+                        plots[nextcity].size = "15";
+                        plots[nextcity].attrs= {fill: "#055e5e"};
                         tmpPlots[nextcity] = plots[nextcity];
                         plots[nextcity].flag = 1;
 
@@ -747,6 +592,98 @@
             }, 200);
             
         });
+
+        ///////////////////////////////////////////////////////////////////////
+        //
+        //
+        //
+        //adds a new point to the route and get data about the city from wiki
+
+        function addcitytoroute(id){
+            $(".mapcontainer").trigger('zoom', {level: 0});
+
+            var tmp = $('#timeline>div>ol li:last').attr('data-horizontal-timeline');
+            var lastcity = "";
+            lastcity = jQuery.parseJSON(tmp).id;
+
+            if ($( "#start_date_picker" ).datepicker('getDate') == null){
+                $( "#popup>h2" ).text('Choose a start date');
+                $( "#popup>p" ).text('Please choose a start date to your next location');
+                $('#overlay').fadeIn(300);
+                return;
+            }
+            if (jQuery.parseJSON(tmp).date == $( "#start_date_picker" ).val()){
+                $( "#popup>h2" ).text('Choose different start date');
+                $( "#popup>p" ).text('Please don\'t choose the same date as end date from your previous location and start date for your next location');
+                $('#overlay').fadeIn(300);
+                return;
+            }
+
+            //Set target city to not delete again
+            plots[id].flag = 1;
+
+            //delete not used plots and keep used plots
+            var tmpPlots = {};
+            var deletedPlots = [];
+
+            Object.values(plots).forEach(plot => {
+                if (plot.flag == 1) {
+                    tmpPlots[plot.city + " (" + plot.country + ")"] = plot;
+                }
+                if (plot.flag == 0){
+                    deletedPlots.push(plot.city + " (" + plot.country + ")");
+                }                                   
+            });
+
+            // Draw new line
+            var opt = {
+                        [id] : {
+                            factor: -0.5
+                            , between: [lastcity, id]
+                            , attrs: {
+                                "stroke-width": 2
+                                , 'stroke': '#055e5e'
+                            }
+                        }
+                    };
+
+            $(".mapcontainer").trigger('update', {
+                    animDuration: 1000,
+                    'newLinks': opt,
+                    newPlots: tmpPlots,
+                    deletePlotKeys: deletedPlots
+            });
+
+            // Make Enddate to Startdate
+            $( "#start_date_picker" ).val($( "#end_date_picker" ).val());
+
+            var contentHtml = "<h1>" + id + "</h1>";
+
+            //Load Wikipedia Artikel
+            $.getJSON("https://en.wikipedia.org/w/api.php?action=query&origin=*&format=json&prop=extracts&exintro=&explaintext=&formatversion=2&titles=" + encodeURIComponent(plots[id].city), function (data) {
+                // Success
+                // Parse each elements
+
+                contentHtml = contentHtml + "<p>" + data.query.pages[0].extract + "</p>";
+
+                var html = "<li data-horizontal-timeline='{\"date\": \"" + $( "#start_date_picker" ).val() + "\", \"customDisplay\": \"" + plots[id].city + "\", \"enddate\": \"" + $( "#end_date_picker" ).val() + "\", \"id\": \"" + id + "\"}'>" + contentHtml + "</li>";
+                $('#timeline').horizontalTimeline('addEvent', html, 'after', jQuery.parseJSON(tmp).date);
+
+                // Smooth scroll enabled with all options set.
+                $('#timeline').horizontalTimeline('goTo', $( "#start_date_picker" ).val(), {smoothScroll: true, speed: 1000, offset: 100, easing: "easeInQuad"});
+
+            });
+
+            selectmonth();
+
+            $( "#nextcity" ).val("");
+        };
+
+        ///////////////////////////////////////////////////////////////////////
+        //
+        //
+        //
+        //color the map according to the weather
 
         function selectmonth(){
 
@@ -912,11 +849,15 @@
 							"right": "exit-right"}}
 
         });
-
-        // When load hide the nexcityfield
-        $( "#nextcityfield" ).hide();
           
         $(function() {
+
+            // When load hide the nexcityfield
+            $( "#nextcityfield" ).hide();
+            $( "#stop" ).hide();
+            $( "#start" ).hide();
+            $( "#remove" ).hide();
+            $( "#add" ).hide();
         
             //
             //
@@ -979,12 +920,17 @@
                 $('#overlay').fadeOut(300);
             });
 
+            // Remove Button
+            $( "#add_button" ).click( function( event ) {
+                addcitytoroute($( "#nextcity" ).val());
+            });
+
 
             // Click Timeline and change Start and End Date and refresh map
             $('#timeline').on("eventChanged.horizontalTimeline", function(event){ 
-                //console.warn($('#timeline>div>ol'));
+
                 $('#timeline>div>ol li').each(function() {  
-                    //console.warn();
+
                     if (event.currentEventDate == jQuery.parseJSON($(this).attr('data-horizontal-timeline')).date) {
 
                         $( "#start_date_picker" ).val(jQuery.parseJSON($(this).attr('data-horizontal-timeline')).date);
@@ -1001,7 +947,7 @@
                     
                     
                 });
-                //console.warn(event);
+
 
             });
             
@@ -1055,6 +1001,9 @@
             <div class="inputbox-date" id="remove">
                 <i class="fas fa-trash-alt" id="remove_button"></i>
             </div>
+            <div class="inputbox-date" id="add">
+                <i class="fas fa-plus" id="add_button"></i>
+            </div>
         </div>
 
         
@@ -1070,7 +1019,7 @@
         <div class="horizontal-timeline" id="timeline"> 
             <div class="events-content"> 
                 <ol> 
-                    <li class="selected" data-horizontal-timeline='{"date": "01/01/2000", "customDisplay": "Start", "id": "Start"}'> Your Trip starts here! </li>
+                    <li class="selected" data-horizontal-timeline='{"date": "02/01/2000", "customDisplay": "Start", "id": "Start"}'> Your Trip starts here! </li>
                 </ol> 
             </div> 
         </div> 
