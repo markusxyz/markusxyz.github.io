@@ -62,7 +62,7 @@
         }
 
         .mapael .areaLegend {
-            top: 440px;
+            top: 60px;
             margin: center;
             position: relative;
             z-index: 2;
@@ -93,17 +93,17 @@
 
         /* Reset Zoom button first */
         .mapael .zoomReset {
-            top: -85px;
+            top: -50px;
         }
 
         /* Then Zoom In button */
         .mapael .zoomIn {
-            top: -60px;
+            top: -25px;
         }
 
         /* Then Zoom Out button */
         .mapael .zoomOut {
-            top: -35px;
+            top: 0px;
         }
 
 
@@ -142,18 +142,22 @@
 
         .inputbox {
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-            width: 25%;
+            width: 200px;
             border-radius: 7px;
-            padding: 5px;
             position: relative;
-            top: -385px;
+            top: -370px;
             right: 0px;  
-            left: 0px;
+            left: 10px;
             background: rgba(255, 255, 255, 1);
             z-index: 1;
-            max-width: 1200px;
-            margin: left;
             padding: 10px;
+        }
+
+        .inputbox .inputfield {
+            box-shadow: none;
+            border-style: none;
+            background-color: white;
+            width: 80%;
         }
 
         .inputbox-date {
@@ -167,6 +171,15 @@
             left: 20px;
             background: rgba(255, 255, 255, 1);
             z-index: 1;
+        }
+
+
+        .inputbox-date .inputfield-date {
+            box-shadow: none;
+            border-style: none;
+            background-color: white;
+            width: 70%;
+            text-align: center;
         }
 
         #start {
@@ -197,22 +210,6 @@
             text-align: center;
             top: -480px;
             cursor: pointer;
-        }
-
-        .inputbox .inputfield {
-            box-shadow: none;
-            border-style: none;
-            background-color: white;
-            width: 80%;
-        }
-
-
-        .inputbox-date .inputfield-date {
-            box-shadow: none;
-            border-style: none;
-            background-color: white;
-            width: 70%;
-            text-align: center;
         }
 
         .horizontal-timeline {
@@ -960,25 +957,24 @@
 <body>
 <div class="page">
     <div style="background-color: black; padding: 10px;">
-        <a href="https://travelfar2019.com/" style="color: white; text-decoration: none;">Website</a>
+        <a href="https://travelfar.de/" style="color: white; text-decoration: none;">Website</a>
     </div>
     <img width="200" height="100" src="./ressources/cropped-travelfar_transparent1.png">
     <br>
     <div class="container">
         <div class="mapcontainer">
-            <div class="areaLegend">
-                <span>Alternative content for the legend</span>
-            </div>
             <div class="map">
                 <span>Alternative content for the map</span>
+            </div>
+            <div class="areaLegend">
+                <span>Alternative content for the legend</span>
             </div>
             <!--<div class="myLegend">
                 <span>Alternative content for the legend</span>
             </div>-->
-            <br>
 
-        </div>
-        <div>
+        
+
         
             <div class="inputbox" id="startcityfield">
                 <label for="startcity"><i class="fas fa-map-pin"></i></label>
@@ -1004,8 +1000,8 @@
             <div class="inputbox-date" id="add">
                 <i class="fas fa-plus" id="add_button"></i>
             </div>
+        
         </div>
-
         
         <div id="overlay">
             <div id="popup">
