@@ -680,7 +680,8 @@
 
             selectmonth();
 
-            $( "#nextcity" ).val("");
+            // Clear field for next city
+            $( "#nextcity" ).val('');
         };
 
         ///////////////////////////////////////////////////////////////////////
@@ -938,7 +939,7 @@
                     if (event.currentEventDate == jQuery.parseJSON($(this).attr('data-horizontal-timeline')).date) {
 
                         $( "#start_date_picker" ).val(jQuery.parseJSON($(this).attr('data-horizontal-timeline')).date);
-                        $( "#nextcity" ).val(jQuery.parseJSON($(this).attr('data-horizontal-timeline')).id);
+                        //$( "#nextcity" ).val(jQuery.parseJSON($(this).attr('data-horizontal-timeline')).id);
                         
                         if (jQuery.parseJSON($(this).attr('data-horizontal-timeline')).enddate){
                             $( "#end_date_picker" ).val(jQuery.parseJSON($(this).attr('data-horizontal-timeline')).enddate);
