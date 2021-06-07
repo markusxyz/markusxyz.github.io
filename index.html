@@ -22,6 +22,7 @@
             padding: 10px;
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
             background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgb(187, 214, 230));
+            position: relative;
         }
 
         .page {
@@ -144,13 +145,13 @@
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
             width: 200px;
             border-radius: 7px;
-            position: relative;
-            top: -370px;
+            position: absolute;
+            top: 10px;
             right: 0px;  
             left: 10px;
             background: rgba(255, 255, 255, 1);
             z-index: 1;
-            padding: 10px;
+            padding: 5px;
         }
 
         .inputbox .inputfield {
@@ -162,10 +163,10 @@
 
         .inputbox-date {
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-            width: 25%;
+            width: 100px;
             border-radius: 7px;
             padding: 5px;
-            position: relative;
+            position: absolute;
             float: left;
             right: 0;  
             left: 20px;
@@ -183,33 +184,33 @@
         }
 
         #start {
-            left: 250px;
-            width: 12%;
-            top: -420px;
+            left: 230px;
+            top: 10px;
         }
 
         #stop {
-            left: 270px;
-            width: 12%;
-            top: -420px;
-        }
-
-        #remove {
-            float: none ;
-            left: 560px;
-            width: 2%;
-            text-align: center;
-            top: -440px;
-            cursor: pointer;
+            left: 350px;
+            top: 10px;
         }
 
         #add {
             float: none ;
-            left: 510px;
-            width: 2%;
+            left: 470px;
+            width: 20px;
             text-align: center;
-            top: -480px;
+            top: 10px;
             cursor: pointer;
+            padding: 10px;
+        }
+
+        #remove {
+            float: none ;
+            left: 520px;
+            width: 20px;
+            text-align: center;
+            top: 10px;
+            cursor: pointer;
+            padding: 10px;
         }
 
         .horizontal-timeline {
@@ -217,6 +218,12 @@
             margin: center;
             width: 70%;
             padding: 10px;
+            top: 50px;
+            position: relative;
+        }
+
+        .horizontal-timeline .events-content {
+            top: -30px;
         }
 
         .ui-autocomplete {
